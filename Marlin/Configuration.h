@@ -534,17 +534,18 @@
   #define DELTA_DIAGONAL_ROD 218.0 // mm
 
   // height from z=0 to home position
-  #define DELTA_HEIGHT 333.05 // get this value from auto calibrate
+  #define DELTA_HEIGHT 332.75 // get this value from auto calibrate
 
-  #define DELTA_ENDSTOP_ADJ { 0.0, 0.0, 0.0 } // get these from auto calibrate
+  #define DELTA_ENDSTOP_ADJ { 0.0, -0.06, -0.10 } // get these from auto calibrate
 
   // Horizontal distance bridged by diagonal push rods when effector is centered.
-  #define DELTA_RADIUS 152.0-31.0-22.6 //mm  Get this value from auto calibrate
+  // #define DELTA_RADIUS 152.0-31.0-22.6 //mm  Get this value from auto calibrate
+  #define DELTA_RADIUS 98.19 //mm  Get this value from auto calibrate
 
   // Trim adjustments for individual towers
   // tower angle corrections for X and Y tower / rotate XYZ so Z tower angle = 0
   // measured in degrees anticlockwise looking from above the printer
-  #define DELTA_TOWER_ANGLE_TRIM { 0.0, 0.0, 0.0 } // get these values from auto calibrate
+  #define DELTA_TOWER_ANGLE_TRIM { -0.31, 0.35, -0.05 } // get these values from auto calibrate
 
   // delta radius and diaginal rod adjustments measured in mm
   //#define DELTA_RADIUS_TRIM_TOWER { 0.0, 0.0, 0.0 }
@@ -597,11 +598,11 @@
 // Mechanical endstop with COM to ground and NC to Signal uses "false" here (most common setup).
 #define X_MIN_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
 #define Y_MIN_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
-#define Z_MIN_ENDSTOP_INVERTING true // set to true to invert the logic of the endstop.
+#define Z_MIN_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
 #define X_MAX_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
 #define Y_MAX_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
 #define Z_MAX_ENDSTOP_INVERTING false // set to true to invert the logic of the endstop.
-#define Z_MIN_PROBE_ENDSTOP_INVERTING true // set to true to invert the logic of the probe.
+#define Z_MIN_PROBE_ENDSTOP_INVERTING false // set to true to invert the logic of the probe.
 
 // Enable this feature if all enabled endstop pins are interrupt-capable.
 // This will remove the need to poll the interrupt pins, saving many CPU cycles.
@@ -792,7 +793,7 @@
 #define Z_PROBE_OFFSET_FROM_EXTRUDER -3.5  // Z offset: -below +above  [the nozzle]
 
 // X and Y axis travel speed (mm/m) between probes
-#define XY_PROBE_SPEED 4000
+#define XY_PROBE_SPEED 8000
 
 // Speed for the first approach when double-probing (MULTIPLE_PROBING == 2)
 #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
