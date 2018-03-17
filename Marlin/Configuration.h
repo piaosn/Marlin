@@ -530,7 +530,7 @@
   // Print surface diameter/2 minus unreachable space (avoid collisions with vertical towers).
   #define DELTA_PRINTABLE_RADIUS 90.0 // mm
 
-  // Center-to-center distance of the holes in the diagonal push rds.
+  // Center-to-center distance of the holes in the diagonal push rods.
   #define DELTA_DIAGONAL_ROD 218.0 // mm
 
   // height from z=0 to home position
@@ -634,7 +634,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2[, E3[, E4]]]]
  */
-// #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 80, 96 }  // default steps per unit for Kossel (GT2, 20 tooth)
+//  X, Y, Z 为DVR8864 32微步, E0为A49xx, 16微步 
 #define DEFAULT_AXIS_STEPS_PER_UNIT   { 160, 160, 160, 96 }  // default steps per unit for Kossel (GT2, 20 tooth)
 
 /**
