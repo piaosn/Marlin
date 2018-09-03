@@ -49,6 +49,13 @@
 #define Z_MAX_PIN          38
 
 //
+// Z Probe (when not Z_MIN_PIN)
+//
+#ifndef Z_MIN_PROBE_PIN
+  #define Z_MIN_PROBE_PIN  38
+#endif
+
+//
 // Steppers
 //
 #define X_STEP_PIN         24
@@ -93,29 +100,39 @@
   #define E2_CS_PIN        35
 #endif
 
-// For Extension Board V2
+//
+// Extension Board V2
 // http://doku.radds.org/dokumentation/extension-board
-//#define E3_STEP_PIN        35
-//#define E3_DIR_PIN         33
-//#define E3_ENABLE_PIN      37
-//#ifndef E3_CS_PIN
-//  #define E3_CS_PIN         6
-//#endif
+//
+//#define RADDS_EXTENSION
+#if ENABLED(RADDS_EXTENSION)
+  #define E3_STEP_PIN        35
+  #define E3_DIR_PIN         33
+  #define E3_ENABLE_PIN      37
+  #ifndef E3_CS_PIN
+    #define E3_CS_PIN         6
+  #endif
 
-//#define Z2_STEP_PIN        29
-//#define Z2_DIR_PIN         27
-//#define Z2_ENABLE_PIN      31
-//#ifndef Z2_CS_PIN
-//  #define Z2_CS_PIN        39
-//#endif
+  #define E3_MS1_PIN         67
+  #define E3_MS2_PIN         68
+  #define E3_MS3_PIN         69
 
-// Microstepping pins - Mapping not from fastio.h (?)
-//#define E3_MS1_PIN         67
-//#define E3_MS2_PIN         68
-//#define E3_MS3_PIN         69
-//#define Z2_MS1_PIN         67 // shared with E3_MS1_PIN
-//#define Z2_MS2_PIN         68 // shared with E3_MS2_PIN
-//#define Z2_MS3_PIN         69 // shared with E3_MS3_PIN
+  #define Z2_STEP_PIN        29
+  #define Z2_DIR_PIN         27
+  #define Z2_ENABLE_PIN      31
+  #ifndef Z2_CS_PIN
+    #define Z2_CS_PIN        39
+  #endif
+
+  #define Z2_MS1_PIN         67   // shared with E3_MS1_PIN
+  #define Z2_MS2_PIN         68   // shared with E3_MS2_PIN
+  #define Z2_MS3_PIN         69   // shared with E3_MS3_PIN
+
+  #define RADDS_EXT_VDD1_PIN 25
+  #define RADDS_EXT_VDD2_PIN 66
+
+  #define BOARD_INIT() OUT_WRITE(RADDS_EXT_VDD1_PIN, HIGH); OUT_WRITE(RADDS_EXT_VDD2_PIN, HIGH)
+#endif
 
 //
 // Temperature Sensors
@@ -129,9 +146,9 @@
 
 // SPI for Max6675 or Max31855 Thermocouple
 #if DISABLED(SDSUPPORT)
-  #define MAX6675_SS        53
+  #define MAX6675_SS       53
 #else
-  #define MAX6675_SS        49
+  #define MAX6675_SS       49
 #endif
 
 //
@@ -140,19 +157,26 @@
 #define HEATER_0_PIN       13
 #define HEATER_1_PIN       12
 #define HEATER_2_PIN       11
-#define HEATER_BED_PIN      7 // BED
+#define HEATER_BED_PIN      7   // BED
 
-#define FAN_PIN             9
+#ifndef FAN_PIN
+  #define FAN_PIN           9
+#endif
 #define FAN1_PIN            8
 
 //
 // Misc. Functions
 //
 #define SDSS                4
-#define PS_ON_PIN          40
+#define PS_ON_PIN          40   // SERVO3_PIN
 
+#ifndef FIL_RUNOUT_PIN
+  #define FIL_RUNOUT_PIN   39   // SERVO2_PIN
+#endif
+
+// I2C EEPROM with 8K of space
 #define I2C_EEPROM
-#define E2END 0x2000
+#define E2END 0x1FFF
 
 //
 // LCD / Controller

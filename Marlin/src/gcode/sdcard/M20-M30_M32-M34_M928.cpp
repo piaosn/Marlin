@@ -29,13 +29,16 @@
 #include "../../module/printcounter.h"
 #include "../../module/stepper.h"
 
-#if ENABLED(PARK_HEAD_ON_PAUSE)
-  #include "../../feature/pause.h"
-  #include "../queue.h"
+#if ENABLED(POWER_LOSS_RECOVERY)
+  #include "../../feature/power_loss_recovery.h"
 #endif
 
-#if NUM_SERIAL > 1
-  #include "../../gcode/queue.h"
+#if ENABLED(PARK_HEAD_ON_PAUSE)
+  #include "../../feature/pause.h"
+#endif
+
+#if ENABLED(PARK_HEAD_ON_PAUSE) || NUM_SERIAL > 1
+  #include "../queue.h"
 #endif
 
 /**
@@ -69,6 +72,9 @@ void GcodeSuite::M22() { card.release(); }
  * M23: Open a file
  */
 void GcodeSuite::M23() {
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    card.removeJobRecoveryFile();
+  #endif
   // Simplify3D includes the size, so zero out all spaces (#7227)
   for (char *fn = parser.string_arg; *fn; ++fn) if (*fn == ' ') *fn = '\0';
   card.openFile(parser.string_arg, true);
@@ -82,8 +88,18 @@ void GcodeSuite::M24() {
     resume_print();
   #endif
 
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    if (parser.seenval('S')) card.setIndex(parser.value_long());
+  #endif
+
   card.startFileprint();
-  print_job_timer.start();
+
+  #if ENABLED(POWER_LOSS_RECOVERY)
+    if (parser.seenval('T'))
+      print_job_timer.resume(parser.value_long());
+    else
+  #endif
+      print_job_timer.start();
 }
 
 /**
@@ -108,21 +124,34 @@ void GcodeSuite::M26() {
 
 /**
  * M27: Get SD Card status
+ *      OR, with 'S<seconds>' set the SD status auto-report interval. (Requires AUTO_REPORT_SD_STATUS)
+ *      OR, with 'C' get the current filename.
  */
 void GcodeSuite::M27() {
-  card.getStatus(
-    #if NUM_SERIAL > 1
-      command_queue_port[cmd_queue_index_r]
-    #endif
-  );
+  #if NUM_SERIAL > 1
+    const int16_t port = command_queue_port[cmd_queue_index_r];
+  #endif
+
+  if (parser.seen('C')) {
+    SERIAL_ECHOPGM_P(port, "Current file: ");
+    card.printFilename();
+  }
+
   #if ENABLED(AUTO_REPORT_SD_STATUS)
-  if (parser.seenval('S'))
-    card.set_auto_report_interval(parser.value_byte()
+    else if (parser.seenval('S'))
+      card.set_auto_report_interval(parser.value_byte()
+        #if NUM_SERIAL > 1
+          , port
+        #endif
+      );
+  #endif
+
+  else
+    card.getStatus(
       #if NUM_SERIAL > 1
-        , command_queue_port[cmd_queue_index_r]
+        port
       #endif
     );
-  #endif
 }
 
 /**
@@ -159,7 +188,7 @@ void GcodeSuite::M30() {
  *
  */
 void GcodeSuite::M32() {
-  if (card.sdprinting) stepper.synchronize();
+  if (card.sdprinting) planner.synchronize();
 
   if (card.cardOK) {
     const bool call_procedure = parser.boolval('P');

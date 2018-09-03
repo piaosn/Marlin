@@ -26,6 +26,7 @@
 #include <lpc17xx_pinsel.h>
 
 #include "../../inc/MarlinConfig.h"
+#include "../shared/Delay.h"
 
 // Interrupts
 void cli(void) { __disable_irq(); } // Disable
@@ -40,26 +41,9 @@ uint32_t millis() {
   return _millis;
 }
 
+// This is required for some Arduino libraries we are using
 void delayMicroseconds(uint32_t us) {
-  static const int nop_factor = (SystemCoreClock / 11000000);
-  static volatile int loops = 0;
-
-  //previous ops already burned most of 1us, burn the rest
-  loops = nop_factor / 4; //measured at 1us
-  while (loops > 0) --loops;
-
-  if (us < 2) return;
-  us--;
-
-  //redirect to delay for large values, then set new delay to remainder
-  if (us > 1000) {
-    delay(us / 1000);
-    us = us % 1000;
-  }
-
-  // burn cycles, time in interrupts will not be taken into account
-  loops = us * nop_factor;
-  while (loops > 0) --loops;
+  DELAY_US(us);
 }
 
 extern "C" void delay(const int msec) {
@@ -70,7 +54,7 @@ extern "C" void delay(const int msec) {
 }
 
 // IO functions
-// As defined by Arduino INPUT(0x0), OUPUT(0x1), INPUT_PULLUP(0x2)
+// As defined by Arduino INPUT(0x0), OUTPUT(0x1), INPUT_PULLUP(0x2)
 void pinMode(const pin_t pin, const uint8_t mode) {
   if (!VALID_PIN(pin)) return;
 

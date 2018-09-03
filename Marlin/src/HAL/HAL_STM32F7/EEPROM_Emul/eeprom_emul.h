@@ -9,7 +9,7 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright © 2016 STMicroelectronics International N.V.
+  * <h2><center>&copy; Copyright Â© 2016 STMicroelectronics International N.V.
   * All rights reserved.</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without
@@ -54,7 +54,7 @@
 // Includes
 // --------------------------------------------------------------------------
 #include "../../../inc/MarlinConfig.h"
-#include "../../HAL.h"
+#include "../HAL.h"
 
 /* Exported constants --------------------------------------------------------*/
 /* EEPROM emulation firmware error codes */
@@ -109,7 +109,7 @@
 /* Exported types ------------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-uint16_t EE_Initialise(void);
+uint16_t EE_Initialize(void);
 uint16_t EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data);
 uint16_t EE_WriteVariable(uint16_t VirtAddress, uint16_t Data);
 

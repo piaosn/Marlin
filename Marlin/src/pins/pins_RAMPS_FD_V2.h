@@ -36,3 +36,12 @@
 #undef INVERTED_FAN_PINS
 
 #define I2C_EEPROM
+#define E2END 0xFFFF // 64K in a 24C512
+
+#ifndef PS_ON_PIN
+  #define PS_ON_PIN        12
+#endif
+
+#ifndef FILWIDTH_PIN
+  #define FILWIDTH_PIN      5   // Analog Input on AUX2
+#endif
